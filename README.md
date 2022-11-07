@@ -9,7 +9,7 @@ Released as part of a University course: https://dbwebb.se/kurser/devops
 
 The application used in this course is based on [The flask mega tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world).
 
-
+![example workflow](https://github.com/Orkanen/microblog-fian12/actions/workflows/workflow.yml/badge.svg)
 
 
 Dev environment
