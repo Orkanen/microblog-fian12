@@ -1,0 +1,14 @@
+version: "3"
+services:
+    test:
+        image: orkanen/microblog:test
+        container_name: "microblog-test"
+        volumes:
+            - "./:/home/microblog/"
+    prod:
+        image: orkanen/microblog:1.0.1-prod
+        container_name: "microblog-prod"
+        ports:
+            - "7000:5000"
+        restart:
+            "always"
