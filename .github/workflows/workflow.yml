@@ -24,3 +24,7 @@ jobs:
       - name: Test with pytest
         run: |
           make test
+    build:
+        needs: workflow
+        uses: ./.github/workflows/test.yml
+        secrets: inherit
