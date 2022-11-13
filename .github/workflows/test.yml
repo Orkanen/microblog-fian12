@@ -21,9 +21,7 @@ jobs:
                 password: ${{ secrets.DOCKER_PASSWORD }}
           - name: Set up Docker Buildx
             uses: docker/setup-buildx-action@v2
-          - name: Build
-            run: docker-compose -f "docker-compose.yml" up -d --build && make test-docker
-          - name: Push docker
+          - name: Docker build push
             uses: docker/build-push-action@v3
             with:
                 context: .
