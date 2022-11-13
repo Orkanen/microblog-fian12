@@ -24,7 +24,7 @@ jobs:
             run: docker-compose up -d
 
           - name: Test Docker-compose
-            run: make docker-test
+            run: make test-docker
 
           - name: Docker build push
             uses: docker/build-push-action@v3
@@ -33,6 +33,7 @@ jobs:
                 file: ./docker/Dockerfile_prod
                 push: true
                 tags: orkanen/microblog:latest
+
           - name: Push docker test
             uses: docker/build-push-action@v3
             with:
