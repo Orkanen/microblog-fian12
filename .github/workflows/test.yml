@@ -22,7 +22,6 @@ jobs:
           - name: Set up Docker Buildx
             uses: docker/setup-buildx-action@v2
           - name: Build
-            uses: docker/build-push-action@v3
             run: docker-compose -f "docker-compose.yml" up -d --build && make test-docker
           - name: Push docker
             uses: docker/build-push-action@v3
