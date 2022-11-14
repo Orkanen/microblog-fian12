@@ -1,7 +1,7 @@
 version: "3"
 services:
     test:
-        image: microblog:test
+        image: orkanen/microblog:test
         container_name: "microblog-test"
         volumes:
             - "./:/home/microblog/"
