@@ -1,0 +1,27 @@
+---
+- name: Install packages
+  apt:
+      force_apt_get: yes
+      name: "{{ packages }}"
+
+#- name: Container present?
+#  docker_container:
+#      name: "microblog"
+#      state: present
+#      image: "orkanen/microblog:latest"
+#  register: result
+
+#- debug: msg="{{ result.failed }}"
+
+- name: Start docker container
+  docker_container:
+      name: "microblog"
+      image: "orkanen/microblog:latest"
+      state: started
+      restart: yes
+      ports: 
+        - "8000:5000"
+      env:
+        SECRET_KEY: pass
+        DATABASE_URL: mysql+pymysql://microblog:pass@{{ groups.database[0] }}:3306/microblog
+#  when: result.failed

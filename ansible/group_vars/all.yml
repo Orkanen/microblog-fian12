@@ -1,13 +1,16 @@
 ---
 # Here you can add variables that will be available for all hosts.
 region: northeurope
-resource_group: <resource-id> # Change me
-domain_name: <domain> # Change me
+resource_group: DIDA-FIAN12-DV1658-H22-LP2
+domain_name: fian12.me
 
 root_user: azureuser
+server_user: deploy
 
 vmtags:
-    StudentId: "<akronym>" # Change me
+    StudentId: "fian12"
 
 
-pub_ssh_key_location: '/home/<user>/.ssh/<key-name>.pub' # Change me, your local ssh key!
+pub_ssh_key_location: '~/.ssh/azure.pub'
+
+admin_email: fian12@student.bth.se

@@ -1,0 +1,37 @@
+---
+-   name: Install python
+    become: true
+    apt:
+        name: python3-pip
+
+-   name: Install python packages
+    command: pip3 install docker
+  
+-   name: Add the docker key
+    become: true
+    apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+  
+-   name: Add docker repo
+    become: true
+    apt_repository:
+        repo: deb https://download.docker.com/linux/debian buster stable
+        state: present
+  
+-   name: Install docker
+    become: true
+    apt:
+        name:
+        -   docker-ce
+        -   docker-ce-cli
+        -   containerd.io
+        -   docker-compose-plugin
+  
+-   name: Add user to docker group
+    become: true
+    user:
+        name: "{{ server_user }}"
+        append:
+            yes
+        groups: docker

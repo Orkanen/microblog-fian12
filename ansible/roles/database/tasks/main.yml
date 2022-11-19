@@ -1,0 +1,14 @@
+---
+- name: Create db container and connect to network
+  docker_container:
+    name: db_microblog
+    image: "mysql:5.7"
+    state: started
+    restart: yes
+    ports:
+      - "3306:3306"
+    env:
+        MYSQL_DATABASE: "microblog"
+        MYSQL_USER: "microblog"
+        MYSQL_PASSWORD: pass
+        MYSQL_ROOT_PASSWORD: pass

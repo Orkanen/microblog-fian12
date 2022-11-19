@@ -1,0 +1,6 @@
+---
+packages:
+  - nginx
+  - python-certbot-nginx
+lb_method: ip_hash
+admin_email: fian12@student.bth.me
