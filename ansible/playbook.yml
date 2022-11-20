@@ -1,0 +1,8 @@
+---
+- include: 10-first-minutes.yml
+
+- include: deploy_lb.yml
+
+- include: database.yml
+
+- include: appServer.yml
