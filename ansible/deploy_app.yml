@@ -1,8 +1,8 @@
 ---
-- include: 10-first-minutes.yml
+- import_playbook: 10-first-minutes.yml
 
-- include: deploy_lb.yml
+- import_playbook: deploy_lb.yml
 
-- include: database.yml
+- import_playbook: database.yml
 
-- include: appServer.yml
+- import_playbook: appServer.yml
