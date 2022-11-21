@@ -1,12 +1,11 @@
 ---
--   name: Add user to docker group
-    become: true
-    user:
-        name: "{{ server_user }}"
-        append:
-            yes
-        groups: docker
-  
+- name: install python dependencies
+  become: true
+  apt:
+    update_cache: yes
+    state: latest
+    name: python3-pip
+
 -   name: Add the docker GPG key
     apt_key:
         url: https://download.docker.com/linux/debian/gpg
@@ -24,12 +23,13 @@
         -   docker-ce-cli
         -   containerd.io
 
-- name: install python dependencies
-  become: true
-  apt:
-    update_cache: yes
-    state: latest
-    name: python3-pip
+-   name: Add user to docker group
+    become: true
+    user:
+        name: "{{ server_user }}"
+        append:
+            yes
+        groups: docker
 
 -   name: Install 'Docker SDK for Python'
     pip:
