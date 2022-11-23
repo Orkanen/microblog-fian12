@@ -8,3 +8,6 @@ server_user_groups:
 
 pub_ssh_key_location:
     - ~/.ssh/azure.pub
+
+# WIP - Not sure if working yet.
+grafana_user_password: $6$stgglvTTyw$L/5T6rR2p0pedAhtWfM5L6gcHd1hT08bchpLwgyYE4h/CrzFlMpih/mNTursHbJCWbhUKqCdlrNkfC5l/w0cz0

@@ -1,0 +1,25 @@
+---
+# WIP - NOT WORKING.
+- name: create prometheus datasource
+  community.grafana.grafana_datasource:
+    name: openshift_prometheus
+    ds_type: prometheus
+    ds_url: https://openshift-monitoring.company.com
+    url: "localhost:9100"
+    access: proxy
+    tls_skip_verify: true
+    additional_json_data:
+      httpHeaderName1: "Authorization"
+    additional_secure_json_data:
+      httpHeaderValue1: "Bearer ihavenogroot"
+
+- name: Export Node dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: http://grafana.company.com
+    url: "localhost:9090"
+    grafana_user: "admin"
+    grafana_password: "{{ grafana_user_password }}"
+    org_id: 1
+    state: export
+    uid: "1630"
+    path: "node_exporter.conf.j2"
