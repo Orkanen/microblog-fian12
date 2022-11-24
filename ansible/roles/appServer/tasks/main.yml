@@ -16,7 +16,7 @@
 - name: Start docker container
   docker_container:
       name: "microblog"
-      image: "orkanen/microblog:latest"
+      image: "orkanen/microblog:flask-exporter"
       state: started
       restart: yes
       ports: 

@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  dbserver:
+    image: 'mysql/mysql-server:5.7'
+    environment:
+      MYSQL_USER: microblog
+      MYSQL_DATABASE: microblog
+      MYSQL_PASSWORD: pass
+    restart: unless-stopped
+    expose:
+      - 3306
+  prod:
+    build:
+      context: .
+      dockerfile: 'docker/Dockerfile_prod'
+    container_name: microblog
+    environment:
+      - SECRET_KEY=production
+      - 'DATABASE_URL=mysql+pymysql://microblog:pass@dbserver/microblog'
+      - FLASK_APP=microblog.py
+      - FLASK_ENV=production
+    ports:
+      - '5000:5000'
+    restart: unless-stopped
