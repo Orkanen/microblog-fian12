@@ -1,11 +1,13 @@
 ---
 # WIP - Seems to be working fine, other parts not so much.
-- hosts: monitor
+- hosts: monitoring
   remote_user: "{{ server_user }}"
   become: yes
   become_method: sudo
   vars:
-      ansible_python_interpreter: /usr/bin/python3
+    ansible_python_interpreter: /usr/bin/python3
   roles:
-    - docker
-    - monitor
+#    - docker
+    - prometheus
+    - grafana
+    - dashboards

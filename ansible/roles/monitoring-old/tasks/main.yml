@@ -1,0 +1,109 @@
+---
+- name: Create network
+  docker_network:
+    name: monitoring
+    state: present
+
+- name: Copy Prometheus config
+  copy:
+    src: prometheus.yml
+    dest: /tmp/prometheus.yml
+
+- name: Copy nginx dashboard
+  copy:
+    src: nginx.json
+    dest: /tmp/nginx.json
+
+- name: Copy ini file
+  template:
+    src: grafana.ini
+    dest: /tmp/grafana.ini
+
+- name: Start Node Exporter container
+  docker_container:
+    name: node
+    image: prom/node-exporter:v1.4.0
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - 9100:9100
+    command:
+    - "--path.procfs=/host/proc"
+    - "--path.rootfs=/rootfs"
+    - "--path.sysfs=/host/sys"
+    - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    restart_policy: unless-stopped
+    networks:
+      - name: monitoring
+    state: started
+
+#- name: Pull prom/statsd-exporter
+#  command: docker pull prom/prometheus
+
+- name: Start Prometheus container
+  docker_container:
+    name: prometheus
+    image: prom/prometheus:v2.37.3
+    volumes:
+      - /tmp/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports: 
+      - 9090:9090
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=24h"
+      - "--web.enable-lifecycle"
+    restart_policy: unless-stopped
+    networks:
+      - name: monitoring
+
+- name: Start Grafana container
+  docker_container:
+    name: grafana
+    image: grafana/grafana:9.2.6
+    volumes:
+      - /tmp/grafana.ini:/etc/grafana/grafana.ini
+    networks:
+      - name: monitoring
+    restart_policy: unless-stopped
+    ports:
+      - 3000:3000
+
+- name: Add Prometheus datasource 
+  community.grafana.grafana_datasource:
+    name: Prometheus
+    url: "http://{{ groups.monitoring[0] }}:3000"
+    ds_type: "prometheus"
+    ds_url: "http://{{ groups.monitoring[0] }}:9090"
+    grafana_user: "admin"
+    grafana_password: "admin"
+  ignore_errors: yes
+
+- name: Add Node exporter full dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: "http://{{ groups.monitoring[0] }}:3000"
+    grafana_user: "admin"
+    grafana_password: "admin"
+    dashboard_id: 1860
+    dashboard_revision: 22
+
+- name: Add Nginx dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: "http://{{ groups.monitoring[0] }}:3000"
+    grafana_user: "admin"
+    grafana_password: "admin"
+    state: present
+    overwrite: true
+    path: /tmp/nginx.json
+
+- name: Add Flask dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: "http://{{ groups.monitoring[0] }}:3000"
+    grafana_user: "admin"
+    grafana_password: "admin"
+    dashboard_id: 16111
+    dashboard_revision: 1

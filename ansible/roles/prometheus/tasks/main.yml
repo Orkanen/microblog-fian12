@@ -1,19 +1,57 @@
 ---
-- name: Template nginx config to server
+- name: Template Prometheus config
+  become: True
   template:
-      src: prometheus.yml.j2
-      dest: /tmp/prometheus.yml
-      force: yes
+    src: prometheus.yml.j2
+    dest: /tmp/prometheus.yml
+    force: yes
 
-- name: Pull prom/statsd-exporter
-  command: docker pull prom/prometheus
+- name: Create monitoring network
+  community.docker.docker_network:
+    name: monitoring
+    state: present
 
-- name: "Launch docker container with microblog application"
-  docker_container:
-      name: "prom"
-      image: "prom/prometheus"
-      restart_policy: "unless-stopped"
-      volumes:
-          - "/tmp/prometheus.yml:/etc/prometheus/prometheus.yml"
-      network_mode: host
-      recreate: yes
+- name: Create Prometheus volume
+  community.docker.docker_volume:
+    volume_name: prometheus-data
+    state: present
+
+- name: Start Node Exporter container
+  community.docker.docker_container:
+    name: node
+    image: prom/node-exporter:v1.4.0
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - 9100:9100
+    command:
+    - "--path.procfs=/host/proc"
+    - "--path.rootfs=/rootfs"
+    - "--path.sysfs=/host/sys"
+    - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    restart_policy: unless-stopped
+    networks:
+      - name: monitoring
+    state: started
+
+- name: Start Prometheus container
+  community.docker.docker_container:
+    name: prometheus
+    image: prom/prometheus:v2.37.3
+    volumes:
+      - /tmp/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports: 
+      - 9090:9090
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=24h"
+      - "--web.enable-lifecycle"
+    restart_policy: unless-stopped
+    networks:
+      - name: monitoring

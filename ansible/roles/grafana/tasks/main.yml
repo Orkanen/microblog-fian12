@@ -1,0 +1,22 @@
+---
+- name: Template ini file
+  template:
+    src: grafana.ini.j2
+    dest: /tmp/grafana.ini
+
+- name: Create grafana docker volume
+  community.docker.docker_volume:
+    name: grafana-data
+
+- name: Start Grafana container
+  community.docker.docker_container:
+    name: grafana
+    image: grafana/grafana:9.2.6
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - /tmp/grafana.ini:/etc/grafana/grafana.ini
+    networks:
+      - name: monitoring
+    restart_policy: unless-stopped
+    ports:
+      - 3000:3000
