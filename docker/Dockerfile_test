@@ -1,23 +1,16 @@
 # syntax=docker/dockerfile:1.4
 FROM python:3.8-alpine
-RUN adduser -D microblog
 
-WORKDIR /home/microblog
+WORKDIR /home/deps
 
 # COPY . .
 COPY requirements requirements
-COPY test.sh ./
 
-RUN apk update && \
-    apk add --no-cache make=4.3-r0 && \
-    python -m venv .venv && \
-    .venv/bin/pip3 install -r requirements/test.txt && \
-    chmod +x test.sh && \
-    chown -R microblog:microblog ./
+RUN python -m venv .venv && \
+ .venv/bin/pip3 install -r requirements/test.txt
 
-ENV FLASK_APP microblog.py
+WORKDIR /home/microblog
 
-USER microblog
+RUN apk add --no-cache make=4.3-r0
 
-EXPOSE 5000
 ENTRYPOINT ["./test.sh"]
