@@ -6,8 +6,8 @@ services:
         volumes:
             - "./:/home/microblog/"
     prod:
-        image: orkanen/microblog:1.0.1-prod
-        container_name: "microblog-prod"
+        image: orkanen/microblog:flask-exporter
+        container_name: "microblog-flask"
         ports:
             - "7000:5000"
         restart:
