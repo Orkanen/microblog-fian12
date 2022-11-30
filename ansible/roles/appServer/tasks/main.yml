@@ -25,3 +25,4 @@
         SECRET_KEY: pass
         DATABASE_URL: mysql+pymysql://microblog:pass@{{ groups.database[0] }}:3306/microblog
 #  when: result.failed
+

@@ -25,6 +25,7 @@ services:
             - "9100:9100"
         networks:
             - monitor
+
     prometheus:
         image: prom/prometheus:v2.31.1
         restart: unless-stopped

@@ -16,26 +16,6 @@
     volume_name: prometheus-data
     state: present
 
-- name: Start Node Exporter container
-  community.docker.docker_container:
-    name: node
-    image: prom/node-exporter:v1.4.0
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    ports:
-      - 9100:9100
-    command:
-    - "--path.procfs=/host/proc"
-    - "--path.rootfs=/rootfs"
-    - "--path.sysfs=/host/sys"
-    - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
-    restart_policy: unless-stopped
-    networks:
-      - name: monitoring
-    state: started
-
 - name: Start Prometheus container
   community.docker.docker_container:
     name: prometheus
@@ -55,3 +35,35 @@
     restart_policy: unless-stopped
     networks:
       - name: monitoring
+  
+- name: Create nginx-prometheus-exporter container
+  community.docker.docker_container:
+      name: nginx-prometheus
+      image: nginx/nginx-prometheus-exporter:0.4.2
+      ports:
+          - "9113:9113"
+      restart_policy: always
+      state: started
+      command: |
+          -nginx.scrape-uri=https://fian12.me/metrics
+          -nginx.retries=10
+          -nginx.ssl-verify=false
+          -web.telemetry-path=/prometheus
+      networks:
+      - name: monitoring
+
+- name: Start Node Exporter container
+  community.docker.docker_container:
+    name: node
+    image: prom/node-exporter:v1.4.0
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - 9100:9100
+    command:
+    - "--path.procfs=/host/proc"
+    - "--path.rootfs=/rootfs"
+    - "--path.sysfs=/host/sys"
+    - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
