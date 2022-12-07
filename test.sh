@@ -9,3 +9,4 @@ cd $CHILD_A
 cd $CHILD_B
 
 make test
+make bandit
