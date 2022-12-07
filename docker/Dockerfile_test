@@ -11,6 +11,6 @@ RUN python -m venv .venv && \
 
 WORKDIR /home/microblog
 
-RUN apk add --no-cache make=4.3-r1
+RUN apk add --no-cache make=4.3-r0
 
 ENTRYPOINT ["./test.sh"]
