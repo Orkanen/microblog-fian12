@@ -4,12 +4,10 @@ on: [push]
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10"]
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -25,6 +23,6 @@ jobs:
         run: |
           make test
   build:
-      needs: build
+      needs: test
       uses: ./.github/workflows/build.yml
       secrets: inherit
