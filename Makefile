@@ -222,3 +222,13 @@ install-deploy:
 test-docker:
 	docker-compose up test
 	docker-compose down
+
+# target: bandit
+.PHONY: bandit
+bandit:
+	@bandit -r app
+
+# target: Zap
+.PHONY: zap
+zap:
+	docker run -t owasp/zap2docker-weekly zap-baseline.py -t https://fian12.me

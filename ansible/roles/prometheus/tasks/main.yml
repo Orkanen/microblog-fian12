@@ -52,18 +52,3 @@
       networks:
       - name: monitoring
 
-- name: Start Node Exporter container
-  community.docker.docker_container:
-    name: node
-    image: prom/node-exporter:v1.4.0
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    ports:
-      - 9100:9100
-    command:
-    - "--path.procfs=/host/proc"
-    - "--path.rootfs=/rootfs"
-    - "--path.sysfs=/host/sys"
-    - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
