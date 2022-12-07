@@ -226,7 +226,7 @@ test-docker:
 # target: bandit
 .PHONY: bandit
 bandit:
-	bandit -r app
+	${py} -m bandit -r app
 
 # target: Zap
 .PHONY: zap
