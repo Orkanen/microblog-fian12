@@ -1,4 +1,3 @@
----
 root_password: $6$YffDsgxU0NU3.qN$23PWrAMR.LPXNOdZUuiBCu.x.saMOJGHfF5ylC3v/M/Hz7N1hk6nttlF.sDyPAvfChnN5HGpc7F/Ii/Kl44Vx.
 
 server_user: deploy
@@ -11,3 +10,5 @@ pub_ssh_key_location:
 
 # WIP - Not sure if working yet.
 grafana_user_password: $6$stgglvTTyw$L/5T6rR2p0pedAhtWfM5L6gcHd1hT08bchpLwgyYE4h/CrzFlMpih/mNTursHbJCWbhUKqCdlrNkfC5l/w0cz0
+
+ansible_python_interpreter: /usr/bin/python3
