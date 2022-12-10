@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microblog
+spec:
+  selector:
+    matchLabels:
+      app: microblog
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: microblog
+    spec:
+      containers:
+        - image: orkanen/microblog:latest
+          imagePullPolicy: Always
+          name: microblog
+          resources:
+            requests:
+              cpu: 250m
+            limits:
+              cpu: 500m
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+          ports:
+            - containerPort: 5000
+              name: microblog
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: DATABASE_URL
